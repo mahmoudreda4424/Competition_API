@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("greenEyeProject")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+eb4f0d039eee3c2cb5aac87cce2f19f0e72c2426")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2b7dd9740aeba308989ea8952753fe2dadfdcff5")]
 [assembly: System.Reflection.AssemblyProductAttribute("greenEyeProject")]
 [assembly: System.Reflection.AssemblyTitleAttribute("greenEyeProject")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
