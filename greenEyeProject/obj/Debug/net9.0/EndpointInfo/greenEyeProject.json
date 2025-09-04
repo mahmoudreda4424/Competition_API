@@ -5,7 +5,7 @@
     "version": "v1"
   },
   "paths": {
-    "/api/Auth/register": {
+    "/api/Auth/Register": {
       "post": {
         "tags": [
           "Auth"
@@ -108,7 +108,9 @@
             "description": "OK"
           }
         }
-      },
+      }
+    },
+    "/api/User/EditProfile": {
       "put": {
         "tags": [
           "User"
@@ -117,17 +119,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateUserDto"
+                "$ref": "#/components/schemas/EditProfileDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateUserDto"
+                "$ref": "#/components/schemas/EditProfileDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateUserDto"
+                "$ref": "#/components/schemas/EditProfileDto"
               }
             }
           }
@@ -142,36 +144,79 @@
   },
   "components": {
     "schemas": {
-      "LoginRequestDto": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "nullable": true
-          },
-          "password": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "RegisterRequestDto": {
+      "EditProfileDto": {
         "type": "object",
         "properties": {
           "name": {
             "type": "string",
             "nullable": true
           },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "profileImageUrl": {
+            "type": "string",
+            "nullable": true
+          },
           "email": {
             "type": "string",
             "nullable": true
           },
-          "password": {
-            "type": "string",
+          "locations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LoginRequestDto": {
+        "required": [
+          "email",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "password": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RegisterRequestDto": {
+        "required": [
+          "email",
+          "name",
+          "password",
+          "phoneNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "email": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "password": {
+            "minLength": 1,
+            "type": "string"
           },
           "phoneNumber": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "profileImageUrl": {
             "type": "string",
             "nullable": true
           },
@@ -183,44 +228,24 @@
         "additionalProperties": false
       },
       "ResetPasswordRequestDto": {
+        "required": [
+          "email",
+          "newPassword",
+          "oldPassword"
+        ],
         "type": "object",
         "properties": {
           "email": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           },
           "oldPassword": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           },
           "newPassword": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "UpdateUserDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "email": {
-            "type": "string",
-            "nullable": true
-          },
-          "phoneNumber": {
-            "type": "string",
-            "nullable": true
-          },
-          "locations": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false

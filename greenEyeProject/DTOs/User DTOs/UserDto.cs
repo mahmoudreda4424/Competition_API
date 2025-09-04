@@ -11,5 +11,7 @@
         public List<string> Locations { get; set; } = new List<string>();
 
         public string Role { get; set; }
+
+        public string? ProfileImageUrl { get; set; }
     }
 }

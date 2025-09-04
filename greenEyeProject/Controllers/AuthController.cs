@@ -23,28 +23,51 @@ namespace greenEyeProject.Controllers
         }
 
         // 🔹 POST: api/Auth/Register
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterRequestDto dto)
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register([FromBody] RegisterRequestDto dto)
         {
             if (await _context.Users.AnyAsync(u => u.Email == dto.Email))
-                return BadRequest(new { message = "Email already exists" });
+                return BadRequest("Email already exists.");
 
             var user = new User
             {
                 Name = dto.Name,
                 Email = dto.Email,
-                PasswordHash = dto.Password, // نص عادي بدون تشفير
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
                 PhoneNumber = dto.PhoneNumber,
-                Location = dto.Location,
-                RoleId = 2, // default: User
+                ProfileImageUrl = dto.ProfileImageUrl ?? "https://example.com/default-profile.png",
+                RoleId = 2, // User role
                 CreatedAt = DateTime.UtcNow
             };
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "User registered successfully" });
+            return Ok(new { message = "User registered successfully!" });
         }
+
+        //[HttpPost("register")]
+        //public async Task<IActionResult> Register(RegisterRequestDto dto)
+        //{
+        //    if (await _context.Users.AnyAsync(u => u.Email == dto.Email))
+        //        return BadRequest(new { message = "Email already exists" });
+
+        //    var user = new User
+        //    {
+        //        Name = dto.Name,
+        //        Email = dto.Email,
+        //        PasswordHash = dto.Password, // نص عادي بدون تشفير
+        //        PhoneNumber = dto.PhoneNumber,
+        //        Location = dto.Location,
+        //        RoleId = 2, // default: User
+        //        CreatedAt = DateTime.UtcNow
+        //    };
+
+        //    _context.Users.Add(user);
+        //    await _context.SaveChangesAsync();
+
+        //    return Ok(new { message = "User registered successfully" });
+        //}
 
         // 🔹 POST: api/Auth/Login
         [HttpPost("login")]

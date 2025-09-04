@@ -21,9 +21,7 @@ namespace greenEyeProject.Controllers
             _mapper = mapper;
         }
 
-        // ========================
-        // GET: api/User/Profile
-        // ========================
+      
         [HttpGet("Profile")]
         [Authorize]
         public async Task<IActionResult> GetProfile()
@@ -35,7 +33,7 @@ namespace greenEyeProject.Controllers
 
             var user = await _context.Users
                 .Include(u => u.Role)
-                .Include(u => u.Locations) 
+                .Include(u => u.Locations)
                 .FirstOrDefaultAsync(u => u.UserId == userId);
 
             if (user == null) return NotFound("User not found.");
@@ -46,7 +44,8 @@ namespace greenEyeProject.Controllers
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 Locations = user.Locations.Select(l => l.LocationName).ToList(),
-                Role = user.Role.RoleName
+                Role = user.Role.RoleName,
+                ProfileImageUrl = user.ProfileImageUrl ?? "https://example.com/default-profile.png"
             };
 
             return Ok(profileDto);
@@ -54,40 +53,43 @@ namespace greenEyeProject.Controllers
 
 
 
-        [HttpPut("Profile")]
+
+        [HttpPut("EditProfile")]
         [Authorize]
-        public async Task<IActionResult> UpdateProfile([FromBody] UpdateUserDto updateDto)
+        public async Task<IActionResult> EditProfile([FromBody] EditProfileDto dto)
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             if (userIdClaim == null) return Unauthorized();
 
             var userId = int.Parse(userIdClaim.Value);
-
-            var user = await _context.Users
-                .Include(u => u.Locations)
-                .FirstOrDefaultAsync(u => u.UserId == userId);
+            var user = await _context.Users.FindAsync(userId);
 
             if (user == null) return NotFound("User not found.");
 
-            // تعديل الحقول
-            user.Name = updateDto.Name ?? user.Name;
-            user.PhoneNumber = updateDto.PhoneNumber ?? user.PhoneNumber;
-            user.Email = updateDto.Email ?? user.Email;
+            // التحديث
+            if (!string.IsNullOrEmpty(dto.Name)) user.Name = dto.Name;
+            if (!string.IsNullOrEmpty(dto.PhoneNumber)) user.PhoneNumber = dto.PhoneNumber;
+            if (!string.IsNullOrEmpty(dto.ProfileImageUrl)) user.ProfileImageUrl = dto.ProfileImageUrl;
+            if (!string.IsNullOrEmpty(dto.Email)) user.Email = dto.Email;
 
-            // تعديل الـ Locations (مثال: حذف القديم وإضافة الجديد)
-            if (updateDto.Locations.Any())
+            if (dto.Locations != null && dto.Locations.Any())
             {
+                
                 user.Locations.Clear();
-                foreach (var locName in updateDto.Locations)
+
+                
+                foreach (var locName in dto.Locations)
                 {
-                    user.Locations.Add(new Location { LocationName = locName, UserId = user.UserId });
+                    user.Locations.Add(new Location { LocationName = locName });
                 }
             }
 
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(new { message = "Profile updated successfully!" });
         }
+
+
 
     }
 }

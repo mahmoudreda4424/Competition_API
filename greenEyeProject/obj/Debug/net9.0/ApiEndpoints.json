@@ -18,7 +18,7 @@
   {
     "ContainingType": "greenEyeProject.Controllers.AuthController",
     "Method": "Register",
-    "RelativePath": "api/Auth/register",
+    "RelativePath": "api/Auth/Register",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -49,28 +49,28 @@
   },
   {
     "ContainingType": "greenEyeProject.Controllers.UserController",
+    "Method": "EditProfile",
+    "RelativePath": "api/User/EditProfile",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "greenEyeProject.DTOs.User_DTOs.EditProfileDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "greenEyeProject.Controllers.UserController",
     "Method": "GetProfile",
     "RelativePath": "api/User/Profile",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "greenEyeProject.Controllers.UserController",
-    "Method": "UpdateProfile",
-    "RelativePath": "api/User/Profile",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "updateDto",
-        "Type": "greenEyeProject.DTOs.User_DTOs.UpdateUserDto",
-        "IsRequired": true
-      }
-    ],
     "ReturnTypes": []
   }
 ]

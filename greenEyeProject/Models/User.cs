@@ -17,6 +17,8 @@ namespace greenEyeProject.Models
         [Required]
         public string PasswordHash { get; set; }
 
+        public string? ProfileImageUrl { get; set; }
+
         public string PhoneNumber { get; set; }
 
         // Optionally keep this if you want a default/fallback location
