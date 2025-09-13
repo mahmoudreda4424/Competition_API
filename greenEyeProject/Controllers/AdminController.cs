@@ -1,5 +1,4 @@
-﻿using greenEyeProject.DTOs.Report_DTOs;
-using greenEyeProject.Services;
+﻿using greenEyeProject.Services;
 using greenEyeProject.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

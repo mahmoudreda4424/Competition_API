@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using greenEyeProject.DTOs.User_DTOs;
-using greenEyeProject.DTOs.Report_DTOs;
 using greenEyeProject.Models;
 using greenEyeProject.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
