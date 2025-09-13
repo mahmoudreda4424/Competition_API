@@ -2,16 +2,12 @@
 {
     public class UserDto
     {
-   
         public string Name { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
 
-        // بدل Location String، نخليه List
-        public List<string> Locations { get; set; } = new List<string>();
-
+        public string? Location { get; set; }  
         public string Role { get; set; }
-
         public string? ProfileImageUrl { get; set; }
     }
 }

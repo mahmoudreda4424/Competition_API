@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\mmm\\OneDrive - Mansoura University - Main\\Desktop\\مسابقات\\desert-challenge-backend\\greenEyeProject\\greenEyeProject.csproj": {}
+    "C:\\Users\\mmm\\OneDrive - Mansoura University - Main\\Desktop\\مسابقات\\GreenEye\\greenEyeProject\\greenEyeProject.csproj": {}
   },
   "projects": {
-    "C:\\Users\\mmm\\OneDrive - Mansoura University - Main\\Desktop\\مسابقات\\desert-challenge-backend\\greenEyeProject\\greenEyeProject.csproj": {
+    "C:\\Users\\mmm\\OneDrive - Mansoura University - Main\\Desktop\\مسابقات\\GreenEye\\greenEyeProject\\greenEyeProject.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mmm\\OneDrive - Mansoura University - Main\\Desktop\\مسابقات\\desert-challenge-backend\\greenEyeProject\\greenEyeProject.csproj",
+        "projectUniqueName": "C:\\Users\\mmm\\OneDrive - Mansoura University - Main\\Desktop\\مسابقات\\GreenEye\\greenEyeProject\\greenEyeProject.csproj",
         "projectName": "greenEyeProject",
-        "projectPath": "C:\\Users\\mmm\\OneDrive - Mansoura University - Main\\Desktop\\مسابقات\\desert-challenge-backend\\greenEyeProject\\greenEyeProject.csproj",
+        "projectPath": "C:\\Users\\mmm\\OneDrive - Mansoura University - Main\\Desktop\\مسابقات\\GreenEye\\greenEyeProject\\greenEyeProject.csproj",
         "packagesPath": "C:\\Users\\mmm\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mmm\\OneDrive - Mansoura University - Main\\Desktop\\مسابقات\\desert-challenge-backend\\greenEyeProject\\obj\\",
+        "outputPath": "C:\\Users\\mmm\\OneDrive - Mansoura University - Main\\Desktop\\مسابقات\\GreenEye\\greenEyeProject\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

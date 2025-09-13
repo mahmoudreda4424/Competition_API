@@ -8,10 +8,11 @@ namespace greenEyeProject.Models
     {
         public int UserId { get; set; }
 
-        [Required]
+        [Required, MaxLength(100)]
         public string Name { get; set; }
 
-        [Required]
+        [Required, MaxLength(150)]
+        [EmailAddress]
         public string Email { get; set; }
 
         [Required]
@@ -19,19 +20,29 @@ namespace greenEyeProject.Models
 
         public string? ProfileImageUrl { get; set; }
 
+        [MaxLength(20)]
         public string PhoneNumber { get; set; }
 
-        // Optionally keep this if you want a default/fallback location
-        public string Location { get; set; }
+        [MaxLength(250)]
+        public string? Location { get; set; }  // بدل جدول Location
 
         public DateTime CreatedAt { get; set; }
 
-        // Foreign Key for Role
+        // Foreign Key
         public int RoleId { get; set; }
         public Role Role { get; set; }
 
-        // Navigation Properties
-        public ICollection<Location> Locations { get; set; } = new List<Location>();
+
+        public bool IsEmailVerified { get; set; } = false;
+        public string? EmailVerificationToken { get; set; }
+        public DateTime? EmailVerificationTokenExpiry { get; set; }
+
+
+        // 🔹 New fields for reset password
+        public string? ResetToken { get; set; }
+        public DateTime? ResetTokenExpiry { get; set; }
+
+        // Navigation
         public ICollection<Report> Reports { get; set; } = new List<Report>();
     }
 }

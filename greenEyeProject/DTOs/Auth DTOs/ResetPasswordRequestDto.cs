@@ -1,11 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace greenEyeProject.DTOs.Auth_DTOs
+﻿namespace greenEyeProject.DTOs.Auth_DTOs
 {
     public class ResetPasswordRequestDto
     {
-        [Required] public string Email { get; set; }
-        [Required] public string OldPassword { get; set; }
-        [Required] public string NewPassword { get; set; }
+        public string Email { get; set; }
+        public string Token { get; set; }
+        public string NewPassword { get; set; }
     }
 }

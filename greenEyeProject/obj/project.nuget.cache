@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "qJ7FjXxzRuY=",
+  "dgSpecHash": "3FyXaJ56JlU=",
   "success": true,
-  "projectFilePath": "C:\\Users\\mmm\\OneDrive - Mansoura University - Main\\Desktop\\مسابقات\\desert-challenge-backend\\greenEyeProject\\greenEyeProject.csproj",
+  "projectFilePath": "C:\\Users\\mmm\\OneDrive - Mansoura University - Main\\Desktop\\مسابقات\\GreenEye\\greenEyeProject\\greenEyeProject.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\mmm\\.nuget\\packages\\automapper\\15.0.1\\automapper.15.0.1.nupkg.sha512",
     "C:\\Users\\mmm\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",

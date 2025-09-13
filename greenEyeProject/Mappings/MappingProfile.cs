@@ -2,7 +2,6 @@
 using greenEyeProject.DTOs.Auth_DTOs;
 using greenEyeProject.DTOs.User_DTOs;
 using greenEyeProject.Models;
-using System.Linq;
 
 namespace GreenEye.API.Mappings
 {
@@ -15,7 +14,7 @@ namespace GreenEye.API.Mappings
             // ========================
             CreateMap<User, UserDto>()
                 .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role.RoleName))
-                .ForMember(dest => dest.Locations, opt => opt.MapFrom(src => src.Locations.Select(l => l.LocationName).ToList()));
+                .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Location)); 
 
             // ========================
             // RegisterRequestDto → User

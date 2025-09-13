@@ -1,5 +1,7 @@
 ﻿using greenEyeProject.DTOs.Auth_DTOs;
 using greenEyeProject.Models;
+using greenEyeProject.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -13,127 +15,153 @@ namespace greenEyeProject.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly AppDbContext _context;
-        private readonly IConfiguration _configuration;
+        private readonly IAuthService _authService;
 
-        public AuthController(AppDbContext context, IConfiguration configuration)
+        public AuthController(IAuthService authService)
         {
-            _context = context;
-            _configuration = configuration;
+            _authService = authService;
         }
 
         // 🔹 POST: api/Auth/Register
         [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequestDto dto)
+        public async Task<IActionResult> Register(RegisterRequestDto dto)
         {
-            if (await _context.Users.AnyAsync(u => u.Email == dto.Email))
-                return BadRequest("Email already exists.");
-
-            var user = new User
+            try
             {
-                Name = dto.Name,
-                Email = dto.Email,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-                PhoneNumber = dto.PhoneNumber,
-                ProfileImageUrl = dto.ProfileImageUrl ?? "https://example.com/default-profile.png",
-                RoleId = 2, // User role
-                CreatedAt = DateTime.UtcNow
-            };
-
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
-            return Ok(new { message = "User registered successfully!" });
+                var result = await _authService.RegisterAsync(dto);
+                return Ok(new { message = result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
-        //[HttpPost("register")]
-        //public async Task<IActionResult> Register(RegisterRequestDto dto)
-        //{
-        //    if (await _context.Users.AnyAsync(u => u.Email == dto.Email))
-        //        return BadRequest(new { message = "Email already exists" });
+        
+        // 🔹 GET: api/Auth/VerifyEmail
+        [HttpGet("VerifyEmail")]
+        public async Task<IActionResult> VerifyEmail([FromQuery] string email, [FromQuery] string token)
+        {
+            try
+            {
+                var result = await _authService.VerifyEmailAsync(email, token);
+                return Ok(new { message = result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
 
-        //    var user = new User
-        //    {
-        //        Name = dto.Name,
-        //        Email = dto.Email,
-        //        PasswordHash = dto.Password, // نص عادي بدون تشفير
-        //        PhoneNumber = dto.PhoneNumber,
-        //        Location = dto.Location,
-        //        RoleId = 2, // default: User
-        //        CreatedAt = DateTime.UtcNow
-        //    };
 
-        //    _context.Users.Add(user);
-        //    await _context.SaveChangesAsync();
-
-        //    return Ok(new { message = "User registered successfully" });
-        //}
-
-        // 🔹 POST: api/Auth/Login
-        [HttpPost("login")]
+        //  POST: api/Auth/Login
+        [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginRequestDto dto)
         {
-            var user = await _context.Users
-                .Include(u => u.Role)
-                .FirstOrDefaultAsync(u => u.Email == dto.Email);
-
-            if (user == null || user.PasswordHash != dto.Password)
-                return Unauthorized(new { message = "Invalid email or password" });
-
-            var token = GenerateJwtToken(user);
-
-            return Ok(new AuthResponseDto
+            try
             {
-                Token = token,
-                Name = user.Name,
-                Email = user.Email,
-                Role = user.Role.RoleName
-            });
+                var result = await _authService.LoginAsync(dto);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return Unauthorized(new { message = ex.Message });
+            }
+        }
+
+        //  POST: api/Auth/Logout
+        [HttpPost("Logout")]
+        [Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+                if (userIdClaim == null) return Unauthorized();
+
+                var userId = int.Parse(userIdClaim.Value);
+                var result = await _authService.LogoutAsync(userId);
+
+                return Ok(new { message = result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+
+        // 🔹 DELETE: api/Auth/DeleteAccount
+        [HttpDelete("DeleteAccount")]
+        [Authorize]
+        public async Task<IActionResult> DeleteAccount()
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+                if (userIdClaim == null) return Unauthorized();
+
+                var userId = int.Parse(userIdClaim.Value);
+                var result = await _authService.DeleteAccountAsync(userId);
+
+                return Ok(new { message = result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+
+
+        //  POST: api/Auth/ChangePassword
+        [HttpPost("ChangePassword")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword(ChangePasswordRequestDto dto)
+        {
+            try
+            {
+                var result = await _authService.ChangePasswordAsync(dto);
+                return Ok(new { message = result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        // 🔹 POST: api/Auth/ForgotPassword
+        [HttpPost("ForgotPassword")]
+        
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordRequestDto dto)
+        {
+            try
+            {
+                var result = await _authService.ForgotPasswordAsync(dto.Email);
+                return Ok(new { message = result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         // 🔹 POST: api/Auth/ResetPassword
-        [HttpPost("reset-password")]
+        [HttpPost("ResetPassword")]
+        
         public async Task<IActionResult> ResetPassword(ResetPasswordRequestDto dto)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
-            if (user == null)
-                return NotFound(new { message = "User not found" });
-
-            // تحقق من الباسورد القديم
-            if (user.PasswordHash != dto.OldPassword)
-                return BadRequest(new { message = "Old password is incorrect" });
-
-            user.PasswordHash = dto.NewPassword; 
-            await _context.SaveChangesAsync();
-
-            return Ok(new { message = "Password reset successfully" });
+            try
+            {
+                var result = await _authService.ResetPasswordAsync(dto);
+                return Ok(new { message = result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
 
-        // 🔹 توليد JWT
-        private string GenerateJwtToken(User user)
-        {
-            var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role.RoleName)
-            };
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddHours(2),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
-                Issuer = _configuration["Jwt:Issuer"],
-                Audience = _configuration["Jwt:Audience"]
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-
-            return tokenHandler.WriteToken(token);
-        }
     }
 }

@@ -1,5 +1,7 @@
-﻿using greenEyeProject;
-using GreenEye.API.Mappings;
+﻿using GreenEye.API.Mappings;
+using greenEyeProject;
+using greenEyeProject.Services;
+using greenEyeProject.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -13,12 +15,23 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+
+// =========================
+//  Auth Service
+// =========================
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
+
+
+
 // =========================
 //  AutoMapper
 // =========================
 builder.Services.AddAutoMapper(cfg =>
 {
-    cfg.AddProfile<MappingProfile>(); // تضيف الـ Profile مباشرة
+    cfg.AddProfile<MappingProfile>(); 
 });
 // =========================
 //  Controllers

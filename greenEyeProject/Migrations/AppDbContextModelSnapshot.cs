@@ -21,117 +21,32 @@ namespace greenEyeProject.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("greenEyeProject.Models.AIAnalysis", b =>
+            modelBuilder.Entity("greenEyeProject.Models.Notification", b =>
                 {
-                    b.Property<int>("AnalysisId")
+                    b.Property<int>("NotificationId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AnalysisId"));
-
-                    b.Property<DateTime>("AnalyzedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("LocationId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("RiskPrediction")
-                        .HasPrecision(5, 2)
-                        .HasColumnType("decimal(5,2)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("AnalysisId");
-
-                    b.HasIndex("LocationId");
-
-                    b.ToTable("Analyses");
-                });
-
-            modelBuilder.Entity("greenEyeProject.Models.ClimateData", b =>
-                {
-                    b.Property<int>("ClimateDataId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClimateDataId"));
-
-                    b.Property<DateTime>("CollectedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("Humidity")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<int>("LocationId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Rainfall")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<decimal>("Temperature")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("decimal(10,2)");
-
-                    b.HasKey("ClimateDataId");
-
-                    b.HasIndex("LocationId");
-
-                    b.ToTable("ClimateData");
-                });
-
-            modelBuilder.Entity("greenEyeProject.Models.Location", b =>
-                {
-                    b.Property<int>("LocationId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LocationId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NotificationId"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<double>("Latitude")
-                        .HasColumnType("float");
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
 
-                    b.Property<string>("LocationName")
+                    b.Property<string>("Message")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Longitude")
-                        .HasColumnType("float");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("LocationId");
+                    b.HasKey("NotificationId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Locations");
-
-                    b.HasData(
-                        new
-                        {
-                            LocationId = 1,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Latitude = 0.0,
-                            LocationName = "Head Office",
-                            Longitude = 0.0,
-                            UserId = 1
-                        },
-                        new
-                        {
-                            LocationId = 2,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Latitude = 0.0,
-                            LocationName = "Branch Office",
-                            Longitude = 0.0,
-                            UserId = 1
-                        });
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("greenEyeProject.Models.Recommendation", b =>
@@ -142,15 +57,13 @@ namespace greenEyeProject.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RecommendationId"));
 
-                    b.Property<int>("AnalysisId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CropType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("LandUseStrategy")
                         .IsRequired()
@@ -162,47 +75,51 @@ namespace greenEyeProject.Migrations
 
                     b.HasKey("RecommendationId");
 
-                    b.HasIndex("AnalysisId");
-
                     b.ToTable("Recommendations");
                 });
 
             modelBuilder.Entity("greenEyeProject.Models.Report", b =>
                 {
-                    b.Property<int>("ReportId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("GeneratedAt")
+                    b.Property<DateTime>("AnalysisDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("KeyDrivers")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("LocationId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("LocationId1")
-                        .HasColumnType("int");
+                    b.Property<decimal>("PredictedNdvi")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Recommendations")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ReportUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SeverityLevel")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserId1")
-                        .HasColumnType("int");
-
-                    b.HasKey("ReportId");
-
-                    b.HasIndex("LocationId");
-
-                    b.HasIndex("LocationId1");
+                    b.HasKey("Id");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("Reports");
                 });
@@ -217,7 +134,8 @@ namespace greenEyeProject.Migrations
 
                     b.Property<string>("RoleName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("RoleId");
 
@@ -236,72 +154,6 @@ namespace greenEyeProject.Migrations
                         });
                 });
 
-            modelBuilder.Entity("greenEyeProject.Models.SatelliteData", b =>
-                {
-                    b.Property<int>("SatelliteDataId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SatelliteDataId"));
-
-                    b.Property<DateTime>("CapturedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("LocationId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("NDVI")
-                        .HasPrecision(5, 3)
-                        .HasColumnType("decimal(5,3)");
-
-                    b.HasKey("SatelliteDataId");
-
-                    b.HasIndex("LocationId");
-
-                    b.ToTable("SatelliteData");
-                });
-
-            modelBuilder.Entity("greenEyeProject.Models.SoilData", b =>
-                {
-                    b.Property<int>("SoilDataId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SoilDataId"));
-
-                    b.Property<decimal>("Carbon")
-                        .HasPrecision(8, 3)
-                        .HasColumnType("decimal(8,3)");
-
-                    b.Property<DateTime>("CollectedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("LocationId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Salinity")
-                        .HasPrecision(8, 3)
-                        .HasColumnType("decimal(8,3)");
-
-                    b.Property<string>("Texture")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("pH")
-                        .HasPrecision(4, 2)
-                        .HasColumnType("decimal(4,2)");
-
-                    b.HasKey("SoilDataId");
-
-                    b.HasIndex("LocationId");
-
-                    b.ToTable("SoilData");
-                });
-
             modelBuilder.Entity("greenEyeProject.Models.User", b =>
                 {
                     b.Property<int>("UserId")
@@ -311,19 +163,32 @@ namespace greenEyeProject.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("Email")
                         .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("EmailVerificationToken")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("EmailVerificationTokenExpiry")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsEmailVerified")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
@@ -331,10 +196,17 @@ namespace greenEyeProject.Migrations
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("ProfileImageUrl")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ResetToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ResetTokenExpiry")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
@@ -349,107 +221,38 @@ namespace greenEyeProject.Migrations
                         new
                         {
                             UserId = 1,
-                            CreatedAt = new DateTime(2025, 9, 4, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@greeneye.com",
-                            Location = "Head Office",
+                            IsEmailVerified = true,
+                            Location = "Aga",
                             Name = "System Admin",
-                            PasswordHash = "Admin@123",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOmip53VeFps8pIdWZ5xzRxG/VZCrcSsQWnyT9/mvEeydoIVrCMTlRj2LKtmm4xkHA==",
                             PhoneNumber = "01016943529",
+                            ProfileImageUrl = "https://drive.google.com/file/d/1p2vkEedqZrs70gInc8LKI0sdHUaYwnMH/view?usp=sharing",
                             RoleId = 1
                         });
                 });
 
-            modelBuilder.Entity("greenEyeProject.Models.AIAnalysis", b =>
-                {
-                    b.HasOne("greenEyeProject.Models.Location", "Location")
-                        .WithMany("Analyses")
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Location");
-                });
-
-            modelBuilder.Entity("greenEyeProject.Models.ClimateData", b =>
-                {
-                    b.HasOne("greenEyeProject.Models.Location", "Location")
-                        .WithMany("ClimateData")
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Location");
-                });
-
-            modelBuilder.Entity("greenEyeProject.Models.Location", b =>
+            modelBuilder.Entity("greenEyeProject.Models.Notification", b =>
                 {
                     b.HasOne("greenEyeProject.Models.User", "User")
-                        .WithMany("Locations")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("greenEyeProject.Models.Recommendation", b =>
-                {
-                    b.HasOne("greenEyeProject.Models.AIAnalysis", "Analysis")
-                        .WithMany("Recommendations")
-                        .HasForeignKey("AnalysisId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Analysis");
                 });
 
             modelBuilder.Entity("greenEyeProject.Models.Report", b =>
                 {
-                    b.HasOne("greenEyeProject.Models.Location", "Location")
-                        .WithMany()
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("greenEyeProject.Models.Location", null)
-                        .WithMany("Reports")
-                        .HasForeignKey("LocationId1");
-
                     b.HasOne("greenEyeProject.Models.User", "User")
-                        .WithMany()
+                        .WithMany("Reports")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("greenEyeProject.Models.User", null)
-                        .WithMany("Reports")
-                        .HasForeignKey("UserId1");
-
-                    b.Navigation("Location");
-
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("greenEyeProject.Models.SatelliteData", b =>
-                {
-                    b.HasOne("greenEyeProject.Models.Location", "Location")
-                        .WithMany("SatelliteData")
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Location");
-                });
-
-            modelBuilder.Entity("greenEyeProject.Models.SoilData", b =>
-                {
-                    b.HasOne("greenEyeProject.Models.Location", "Location")
-                        .WithMany("SoilData")
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Location");
                 });
 
             modelBuilder.Entity("greenEyeProject.Models.User", b =>
@@ -463,24 +266,6 @@ namespace greenEyeProject.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("greenEyeProject.Models.AIAnalysis", b =>
-                {
-                    b.Navigation("Recommendations");
-                });
-
-            modelBuilder.Entity("greenEyeProject.Models.Location", b =>
-                {
-                    b.Navigation("Analyses");
-
-                    b.Navigation("ClimateData");
-
-                    b.Navigation("Reports");
-
-                    b.Navigation("SatelliteData");
-
-                    b.Navigation("SoilData");
-                });
-
             modelBuilder.Entity("greenEyeProject.Models.Role", b =>
                 {
                     b.Navigation("Users");
@@ -488,8 +273,6 @@ namespace greenEyeProject.Migrations
 
             modelBuilder.Entity("greenEyeProject.Models.User", b =>
                 {
-                    b.Navigation("Locations");
-
                     b.Navigation("Reports");
                 });
 #pragma warning restore 612, 618
